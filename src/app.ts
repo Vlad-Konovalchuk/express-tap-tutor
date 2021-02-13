@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import errorMiddleware from "./middleware/error.middleware";
 
 class App {
   public app: express.Application;
@@ -11,6 +12,7 @@ class App {
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeErrorHandling();
   }
 
   private initializeMiddlewares() {
@@ -20,6 +22,10 @@ class App {
     controllers.forEach((controller) => {
       this.app.use("/", controller.router);
     });
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 
   public listen() {

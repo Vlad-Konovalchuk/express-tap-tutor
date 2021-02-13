@@ -1,17 +1,18 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
+import "dotenv/config";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 import PostController from "./posts/posts.controller";
 import App from "./app";
+import config from "./ormConfig";
 
-function loggerMiddleware(
-  request: express.Request,
-  response: express.Response,
-  next
-) {
-  console.log(`${request.method} ${request.path}`);
-  next();
-}
+(async () => {
+  try {
+    await createConnection(config);
+  } catch (error) {
+    console.log("Error while connecting to the database", error);
+    return error;
+  }
 
-const app = new App([new PostController()], 5000);
-
-app.listen();
+  const app = new App([new PostController()], process.env.PORT);
+  app.listen();
+})();
