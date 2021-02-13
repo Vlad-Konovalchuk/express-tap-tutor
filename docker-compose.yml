@@ -1,0 +1,30 @@
+version: "3"
+services: 
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+    - "4000:5432"
+    volumes:
+    - /data/postgres:/data/postgres
+    env_file: 
+    - docker.env
+    networks:
+    - postgres
+  
+  pgAdmin:
+   links:
+   - postgres:postgres
+   container_name: pgAdmin
+   image: dpage/pgadmin4
+   ports:
+   - "8080:80"
+   volumes:
+   - /data/pgAdmin:/root/.pgAdmin
+   env_file: 
+   - docker.env
+   networks: 
+   - postgres
+networks: 
+  postgres:
+    driver: bridge          
